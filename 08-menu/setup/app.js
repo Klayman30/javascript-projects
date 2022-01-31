@@ -72,3 +72,54 @@ const menu = [
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
 ];
+
+// target the parent of all menu items
+const sectionCenter = document.querySelector('.section-center');
+
+// target the filter buttons
+const filterBtns = document.querySelectorAll('.filter-btn');
+
+// load menu items
+window.addEventListener('DOMContentLoaded', function() {
+  displayMenuItems(menu);
+});
+
+// filter items
+// using dataset property, we can get the specific category listed in the menu array for each item
+// we create a new array menuCategory which has a filter applied on the original
+// if the category of the menu item matches the category clicked, return it
+// if the category is all then just display the entire menu, otherwise display menuCategory which has the filer
+filterBtns.forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    const category = e.currentTarget.dataset.id;
+    const menuCategory = menu.filter(function(menuItem) {
+      if (menuItem.category === category) {
+        return menuItem;
+      } 
+    });
+    if (category === 'all') {
+      displayMenuItems(menu);
+    } else {
+      displayMenuItems(menuCategory);
+    }
+  });
+});
+
+// we used the map method to access each item from the menu array
+// using the html we set up, menu-item, and string templating, we dynamically generated that same html block for every item as a single string (join.(''))
+// then we use innerHTML to change the html content of the parent section to display the html for all items
+function displayMenuItems(menuItems) {
+  let displayMenu = menuItems.map(function(item) {
+    return `<article class="menu-item">
+    <img src=${item.img} class="photo" alt="${item.title}">
+    <div class="item-info">
+      <header>
+        <h4>${item.title}</h4>
+        <h4 class="${item.price}">$15</h4>
+      </header>
+      <p class="item-text">${item.desc}</div>
+  </article>`;
+  });
+  displayMenu = displayMenu.join('');
+  sectionCenter.innerHTML = displayMenu;
+}
